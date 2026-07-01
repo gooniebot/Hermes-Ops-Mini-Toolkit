@@ -30,10 +30,8 @@ This runs:
 
 - `git` check (`git status`, remotes, branch)
 - `ssh -T git@github.com`
-- DNS TXT lookup for `_github-pages-challenge-gooniebot.gooniebot.com`
-- smoke checks for:
-  - `https://api.cryptonical.io/health`
-  - `https://cryptonical.io/api/markets?symbol=SPY`
+- DNS TXT lookup (only if `--txt-host` is provided)
+- Smoke checks for URLs passed via `--smoke`
 
 ### JSON output
 
@@ -41,11 +39,18 @@ This runs:
 hermes-ops --json
 ```
 
+### Generic smoke-check mode (user supplied URLs)
+
+```bash
+hermes-ops \
+  --smoke "https://google.com,https://duckduckgo.com"
+```
+
 ### Add a custom TXT check and include builds
 
 ```bash
 hermes-ops \
-  --txt-host _github-pages-challenge-gooniebot.gooniebot.com \
+  --txt-host _github-pages-challenge-example.org.example \
   --txt-value 4cd9ea470243637059e42ec4695a76 \
   --build client: npm run build,api: npm run build
 ```
@@ -58,10 +63,12 @@ hermes-ops \
 [
   {"name":"git","status":"pass","details":"git context looks ready for publish"},
   {"name":"ssh","status":"pass","details":"SSH auth successful"},
-  {"name":"dns","status":"pass","details":"TXT value present"},
+  {"name":"dns","status":"warn","details":"TXT host not provided"},
   {"name":"smoke","status":"pass","details":"all endpoints returned success"}
 ]
 ```
+
+If no `--smoke` endpoints are provided, smoke result shows warning status and empty endpoint data.
 
 ## License
 

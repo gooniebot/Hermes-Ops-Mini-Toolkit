@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hermes-ops-mini-toolkit"
-version = "0.1.0"
+version = "0.1.1"
 description = "Operational sanity-check toolkit for Git/DNS/build/API pre-deploy validation."
 readme = "README.md"
 authors = [{ name = "Goonie Web" }]

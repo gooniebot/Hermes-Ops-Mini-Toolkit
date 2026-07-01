@@ -107,6 +107,9 @@ def check_ssh(host: str) -> Dict:
 def check_dns(name: str, expected_txt: Optional[str] = None) -> Dict:
     info = {}
 
+    if not name.strip():
+        return _clean_result("dns", "warn", "TXT host not provided", {"host": name})
+
     # A/AAAA via socket
     try:
         infos = socket.getaddrinfo(name, None)
@@ -146,6 +149,14 @@ def _http_get(url: str, timeout: int = 8) -> Dict:
 
 
 def check_smoke(endpoints: List[str], timeout: int = 8) -> Dict:
+    if not endpoints:
+        return _clean_result(
+            "smoke",
+            "warn",
+            "No smoke endpoints provided",
+            {"endpoints": {}},
+        )
+
     results = {}
     all_ok = True
     for url in endpoints:
@@ -218,14 +229,18 @@ class CLIConfig:
     build_command: str
 
 
-def parse_args(argv: Optional[List[str]] = None) -> CLIConfig:
+def parse_args(argv: Optional[List[str]] = None):
     p = argparse.ArgumentParser(description="Hermes Ops Mini-Toolkit")
     p.add_argument("--cwd", default=".", help="Working directory")
     p.add_argument("--json", action="store_true", help="Machine-readable output")
     p.add_argument("--host", default="git@github.com", help="SSH host to test")
-    p.add_argument("--txt-host", default="_github-pages-challenge-gooniebot.gooniebot.com", help="TXT lookup host")
+    p.add_argument("--txt-host", default="", help="TXT lookup host (required when checking DNS TXT)")
     p.add_argument("--txt-value", default=None, help="Expected TXT token")
-    p.add_argument("--smoke", default="https://api.cryptonical.io/health,https://cryptonical.io/api/markets?symbol=SPY", help="Comma-separated endpoints")
+    p.add_argument(
+        "--smoke",
+        default="",
+        help="Comma-separated endpoint URLs for generic smoke checks. Leave empty to skip.",
+    )
     p.add_argument("--build", default="", help="Comma-separated project:command pairs")
     return p.parse_args(argv)
 
