@@ -83,6 +83,20 @@ hermes-ops \
 
 If no `--smoke` endpoints are provided, smoke result shows warning status and empty endpoint data.
 
+## Running screenshots
+
+### Help output
+![hermes-ops --help](assets/help.png)
+
+### Preset run (neutral-web)
+![hermes-ops --preset neutral-web --json](assets/preset-neutral.png)
+
+### Preset run (minimal)
+![hermes-ops --preset minimal](assets/preset-minimal.png)
+
+### Test run
+![pytest -q](assets/tests.png)
+
 ## License
 
 MIT
