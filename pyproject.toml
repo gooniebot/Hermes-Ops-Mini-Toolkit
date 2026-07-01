@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-ops-mini-toolkit"
+version = "0.1.0"
+description = "Operational sanity-check toolkit for Git/DNS/build/API pre-deploy validation."
+readme = "README.md"
+authors = [{ name = "Goonie Web" }]
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "typing-extensions; python_version < '3.11'"
+]
+
+[project.urls]
+Homepage = "https://github.com/gooniebot/Hermes-Ops-Mini-Toolkit"
+
+[project.scripts]
+hermes-ops = "hermes_ops_mini_toolkit.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
