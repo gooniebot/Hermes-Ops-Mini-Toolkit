@@ -46,6 +46,19 @@ hermes-ops \
   --smoke "https://google.com,https://duckduckgo.com"
 ```
 
+### Presets
+
+Use `--preset` to quickly load common endpoint sets:
+
+- `neutral-web`: `https://google.com`, `https://duckduckgo.com`
+- `minimal`: no smoke endpoints
+
+```bash
+hermes-ops --preset neutral-web
+```
+
+If a preset name is unknown, it returns a warning and continues with other checks.
+
 ### Add a custom TXT check and include builds
 
 ```bash

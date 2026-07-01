@@ -1,4 +1,4 @@
-from hermes_ops_mini_toolkit.cli import check_dns, check_smoke, _has_cmd, _run_cmd
+from hermes_ops_mini_toolkit.cli import PRESETS, check_dns, check_smoke, resolve_smoke_endpoints, _has_cmd, _run_cmd
 
 
 def test_git_command_exists():
@@ -21,3 +21,15 @@ def test_dns_without_host_warns():
     result = check_dns("")
     assert result["status"] == "warn"
     assert result["name"] == "dns"
+
+
+def test_resolve_smoke_prefers_explicit_smoke_over_preset():
+    assert resolve_smoke_endpoints("example.com,openai.com", "neutral-web") == ["example.com", "openai.com"]
+
+
+def test_resolve_smoke_from_preset():
+    assert resolve_smoke_endpoints("", "neutral-web") == PRESETS["neutral-web"]
+
+
+def test_resolve_smoke_unknown_preset_returns_empty():
+    assert resolve_smoke_endpoints("", "not-a-real-preset") == []

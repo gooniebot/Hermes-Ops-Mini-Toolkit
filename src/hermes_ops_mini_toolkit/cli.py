@@ -17,6 +17,12 @@ from pathlib import Path
 import socket
 
 
+PRESETS: Dict[str, List[str]] = {
+    "neutral-web": ["https://google.com", "https://duckduckgo.com"],
+    "minimal": [],
+}
+
+
 def _run_cmd(cmd: List[str], cwd: str = ".", check: bool = False, capture: bool = True) -> subprocess.CompletedProcess:
     return subprocess.run(
         cmd,
@@ -217,6 +223,16 @@ def format_output(results: List[Dict], json_mode: bool = False) -> None:
             print(f"  -> {json.dumps(result['data'])}")
 
 
+def resolve_smoke_endpoints(smoke_arg: str, preset: str) -> List[str]:
+    if smoke_arg.strip():
+        return [x.strip() for x in smoke_arg.split(",") if x.strip()]
+
+    if preset and preset in PRESETS:
+        return PRESETS[preset]
+
+    return []
+
+
 @dataclass
 class CLIConfig:
     cwd: str
@@ -227,6 +243,7 @@ class CLIConfig:
     smoke_endpoints: List[str]
     build_projects: List[str]
     build_command: str
+    preset: str
 
 
 def parse_args(argv: Optional[List[str]] = None):
@@ -241,8 +258,14 @@ def parse_args(argv: Optional[List[str]] = None):
         default="",
         help="Comma-separated endpoint URLs for generic smoke checks. Leave empty to skip.",
     )
+    p.add_argument(
+        "--preset",
+        default="",
+        help="Optional preset for common smoke endpoint bundles (e.g. neutral-web, minimal)",
+    )
     p.add_argument("--build", default="", help="Comma-separated project:command pairs")
     return p.parse_args(argv)
+
 
 
 def main(argv: Optional[List[str]] = None) -> int:
@@ -253,16 +276,27 @@ def main(argv: Optional[List[str]] = None) -> int:
         host=args.host,
         txt_host=args.txt_host,
         txt_value=args.txt_value,
-        smoke_endpoints=[x.strip() for x in args.smoke.split(",") if x.strip()],
+        smoke_endpoints=resolve_smoke_endpoints(args.smoke, args.preset),
         build_projects=[x for x in args.build.split(",") if x.strip()],
         build_command="npm run build",
+        preset=args.preset,
     )
 
     results = []
+    if args.preset and args.preset not in PRESETS and not args.smoke.strip():
+        results.append(
+            _clean_result(
+                "preset",
+                "warn",
+                f"Unknown preset '{args.preset}'",
+                {"preset": args.preset, "available": sorted(PRESETS)},
+            )
+        )
+
     results.append(check_git(cfg.cwd))
     results.append(check_ssh(cfg.host))
     results.append(check_dns(cfg.txt_host, cfg.txt_value))
-    results.append(check_smoke(cfg.smoke_endpoints))
+    results.append(check_smoke(cfg.smoke_endpoints, timeout=10))
 
     # Build check format: "path:cmd" | default command
     for item in cfg.build_projects:
