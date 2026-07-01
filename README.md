@@ -1,3 +1,5 @@
+![Hermes-Ops-Mini-Toolkit](assets/hermes-ops-logo.png)
+
 # Hermes-Ops-Mini-Toolkit
 
 A tiny, stdlib-only CLI toolkit to run the operational checks people repeatedly do before deployment.
