@@ -2,6 +2,10 @@
 
 # Hermes-Ops-Mini-Toolkit
 
+![GitHub release](https://img.shields.io/github/v/release/gooniebot/Hermes-Ops-Mini-Toolkit?display_name=tag)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/gooniebot/Hermes-Ops-Mini-Toolkit/ci.yml?label=ci)
+![License](https://img.shields.io/github/license/gooniebot/Hermes-Ops-Mini-Toolkit)
+
 A tiny, stdlib-only CLI toolkit to run the operational checks people repeatedly do before deployment.
 
 ## Why

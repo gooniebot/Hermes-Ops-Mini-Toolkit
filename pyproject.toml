@@ -16,6 +16,9 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/gooniebot/Hermes-Ops-Mini-Toolkit"
+Repository = "https://github.com/gooniebot/Hermes-Ops-Mini-Toolkit"
+Releases = "https://github.com/gooniebot/Hermes-Ops-Mini-Toolkit/releases"
+Logo = "https://raw.githubusercontent.com/gooniebot/Hermes-Ops-Mini-Toolkit/main/assets/hermes-ops-logo.png"
 
 [project.scripts]
 hermes-ops = "hermes_ops_mini_toolkit.cli:main"
